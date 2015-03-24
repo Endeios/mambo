@@ -1,0 +1,17 @@
+{
+  "name": "mambo",
+  "version": "0.0.1",
+  "authors": [
+    "endeios@gmail.com <endeios@gmail.com>"
+  ],
+  "description": "mambo doc converter",
+  "license": "GPLv3",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
