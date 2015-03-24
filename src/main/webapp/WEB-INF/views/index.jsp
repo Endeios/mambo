@@ -17,9 +17,9 @@
 		<div class="header clearfix">
 			<nav>
 			<ul class="nav nav-pills pull-right">
-				<li role="presentation" class="active"><a href="#">Home</a></li>
-				<li role="presentation"><a href="#">About</a></li>
-				<li role="presentation"><a href="#">Contact</a></li>
+				<li role="presentation" class="active"><a href='<c:url value="/" />'>Home</a></li>
+				<li role="presentation"><a href="<c:url value="/about" />">About</a></li>
+				<li role="presentation"><a href="<c:url value="/contact" />">Contact</a></li>
 			</ul>
 			</nav>
 			<h3 class="text-muted">Mambo Converter</h3>

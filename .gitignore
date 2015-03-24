@@ -4,3 +4,4 @@ src/main/webapp/static/*
 .project
 .settings/
 .springBeans
+/target/

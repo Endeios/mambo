@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
@@ -12,17 +10,46 @@
 	<context:annotation-config />
 	<context:spring-configured />
 	<mvc:default-servlet-handler />
-	<bean class="mambo.controllers.TransformationController" id="transformationController"/>
+	<bean class="mambo.controllers.TransformationController" id="transformationController">
+		<property name="firstRowIndex" value="1" />
+		<property name="titleRowIndex" value="0" />
+	</bean>
 
-	<mvc:resources location="/static/bootstrap/dist/" mapping="/bootstrap/**" />
+	<mvc:resources location="/static/bootstrap/dist/"
+		mapping="/bootstrap/**" />
 	<mvc:resources location="/static/jquery/dist/" mapping="/jquery/**" />
 	<mvc:annotation-driven />
-	<!-- <mvc:resources location="/mambo/" mapping="/mamboApp/**" /> -->
-	<bean class="org.springframework.web.multipart.support.StandardServletMultipartResolver" id="multipartResolver">
+	<mvc:resources location="/mamboRes/" mapping="/res/**" />
+	<bean
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver"
+		id="multipartResolver">
 	</bean>
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
 	<mvc:view-controller path="/" view-name="index" />
+	<mvc:view-controller path="/about" view-name="about" />
+	<mvc:view-controller path="/contact" view-name="contact" />
+
+	<bean
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"
+		id="mappingJackson2JsonView">
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	<!-- Jackson global config -->
+	<bean id="jacksonSerializationConfig" class="com.fasterxml.jackson.databind.SerializationConfig"
+		factory-bean="jacksonObjectMapper" factory-method="getSerializationConfig" />
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="jacksonSerializationConfig" />
+		<property name="targetMethod" value="withSerializationInclusion" />
+		<property name="arguments">
+			<list>
+				<value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_DEFAULT</value>
+			</list>
+		</property>
+	</bean>
 
 </beans>
+

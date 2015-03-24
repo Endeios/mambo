@@ -14,35 +14,40 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.WorkbookUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class TransformationController {
-	@RequestMapping(value = "/transform", method = RequestMethod.POST)
-	public void transform(
-			/* @RequestParam("name") String name, */@RequestParam("file") MultipartFile file,
-			HttpServletResponse servletResponse) throws IOException,
+	private Integer titleRowIndex=0;
+	private Integer firstRowIndex=1;
+	
+	@RequestMapping(value = "/transform", method = RequestMethod.POST, produces="application/json" )
+	public @ResponseBody List<Map<String,Double>> transform(@RequestParam("file") MultipartFile file,HttpServletResponse response) throws IOException,
 			InvalidFormatException {
-		servletResponse.setHeader("ContentType", "application/text");
+		
+		List<Map<String, Double>> retData = danceMambo(file);
+		response.addHeader("Content-Disposition", "attachment; filename=\""+file.getOriginalFilename()+".json\"");
+		return retData;
+	}
+
+	private List<Map<String, Double>> danceMambo(MultipartFile file)
+			throws IOException, InvalidFormatException {
 		Workbook wb = WorkbookFactory.create(file.getInputStream());
 		Sheet sheet = wb.getSheetAt(0);
-		Row titleRow = sheet.getRow(0);
+		Row titleRow = sheet.getRow(getTitleRowIndex());
 		List<String> title = new ArrayList<String>();
+
 		for (Cell c : titleRow) {
 			title.add(c.getStringCellValue());
 		}
-		int rowStart = 1;
+		int rowStart = getFirstRowIndex();
 		int rowEnd = sheet.getLastRowNum();
 		List<Map<String,Double>> retData = new ArrayList<Map<String,Double>>();
-		for(String el:title){
-			
-			servletResponse.getWriter().write("Element: "+el+"\n");
-		}
 		
 		for(int i = rowStart;i<rowEnd;i++){
 			Row currentRow = sheet.getRow(i);
@@ -56,13 +61,23 @@ public class TransformationController {
 			}
 			retData.add(rowModel);
 		}
-		
-		for(Map<String,Double> row:retData){
-			servletResponse.getWriter().write(""+row.toString());
-		}
-		
-		 servletResponse.getWriter().write("Name: "+file.getOriginalFilename()+"\n");
-		 servletResponse.getWriter().write("Size: "+file.getSize()+"\n");
-		 servletResponse.getWriter().write("RowEnd: "+rowEnd+"\n");
+		return retData;
+	}
+
+	public Integer getTitleRowIndex() {
+		return titleRowIndex;
+	}
+
+	public void setTitleRowIndex(Integer titleRowIndex) {
+		this.titleRowIndex = titleRowIndex;
+	}
+
+	public Integer getFirstRowIndex() {
+		return firstRowIndex;
+	}
+
+	public void setFirstRowIndex(Integer firstRowIndex) {
+		this.firstRowIndex = firstRowIndex;
 	}
 }
+
