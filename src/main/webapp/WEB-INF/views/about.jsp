@@ -34,9 +34,10 @@
 					<h2>About Mambo</h2>
 					<p>
 					Mambo is a simple excel to json transformer, that takes the first row
-					of the first sheet of the input excel file and returns an array of json objects,
+					of the various sheet of the input excel file and returns a list of jsonObjects
+					made by the name of the sheet and the array of json objects,
 					that takes properties from columns and data from rows.
-					<a href="<c:url value="/res/testMambo.xls"/>">this is an example</a> 
+					<a href="<c:url value="/res/testMambo.xls"/>">this is an example</a> document 
 					</p>
 				</div>
 			</div>
