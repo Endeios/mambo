@@ -5,3 +5,4 @@ src/main/webapp/static/*
 .settings/
 .springBeans
 /target/
+src/test/resources/Zippone/*

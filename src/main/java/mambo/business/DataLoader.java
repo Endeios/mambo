@@ -48,15 +48,21 @@ public class DataLoader {
 		/**/
 		
 		Document docArchivi = Jsoup.parse(archiviIS, "utf-8", "");
-		Elements stru = docArchivi.select("ul li a[href]");
+//		Elements stru = docArchivi.select("ul li a[href]");
+		Elements stru = docArchivi.select("body > h3:nth-child(3) > ul:nth-child(1) > ul:nth-child(3) > ol:nth-child(1) > h4:nth-child(1) > li  a[href]");
+		
 		for (Element element : stru) {
 			System.out.println("Stru "+element.attr("href"));
 		}
 		
-		Elements soggettiProduttori = docArchivi.select("h3 ul a[href]");
-		
+		//Elements soggettiProduttori = docArchivi.select("h3 ul a[href]");
+		Elements soggettiProduttori = docArchivi.select("body > h3:nth-child(8) > ul:nth-child(1) > a[href]");
 		for (Element element : soggettiProduttori) {
 			System.out.println("Soggetti produttori: "+element.attr("href"));
+		}
+		Elements archivi_doc = docArchivi.select("body > h3:nth-child(3) > ul > a[href]");
+		for (Element element : archivi_doc) {
+			System.out.println("Archivi: "+element.attr("href"));
 		}
 	}
 }
