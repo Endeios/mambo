@@ -1,15 +1,12 @@
 package mambo.business;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.ListIterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +18,6 @@ public class DataLoader {
 			IOException {
 		ZipFile zip = new ZipFile(archive);
 		Enumeration<? extends ZipEntry> entries = zip.entries();
-		ZipInputStream mydata = new ZipInputStream(new FileInputStream(archive));
 		String rootDir = "";
 		while (entries.hasMoreElements()) {
 			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
@@ -64,5 +60,7 @@ public class DataLoader {
 		for (Element element : archivi_doc) {
 			System.out.println("Archivi: "+element.attr("href"));
 		}
+		
+		zip.close();
 	}
 }
