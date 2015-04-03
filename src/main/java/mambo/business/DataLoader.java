@@ -2,65 +2,47 @@ package mambo.business;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.runner.notification.RunListener.ThreadSafe;
 
+@ThreadSafe
 public class DataLoader {
-	public static void loadArchive(File archive) throws ZipException,
-			IOException {
-		ZipFile zip = new ZipFile(archive);
-		Enumeration<? extends ZipEntry> entries = zip.entries();
-		String rootDir = "";
-		while (entries.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-			if (zipEntry.isDirectory()) {
-				rootDir = zipEntry.getName();
-			}
-
-			System.out.println(zipEntry);
-
-		}
-
-		String archiviEntryName = rootDir + "Archivi.htm";
-		System.out.println(archiviEntryName);
-		ZipEntry archivi = zip.getEntry(archiviEntryName);
-		InputStream archiviIS = zip.getInputStream(archivi);
+	public static List<Map<String,Object>> loadArchive(File archive) throws IOException{
+		List<Map<String,Object>> retData = new ArrayList<Map<String,Object>>();
 		
-		/**/
-		byte[] buffer = new byte[1024];
-		int size_read = 0;
-		while ((size_read = archiviIS.read(buffer)) > 0) {
-			System.out.write(buffer, 0, size_read);
-		}
-		archiviIS = zip.getInputStream(archivi);
-		/**/
+		Document doc = Jsoup.parse(archive, "windows-1252");
+		List<String> headers = new ArrayList<String>();
+		String headerPath = "body > table > tbody > tr > th ";
+		String rowsPath = "body > table > tbody tr";
+		Elements header = doc.select(headerPath);
+	    for(Element el: header){
+	    	headers.add(el.html());
+	    }
+	    
+	    Elements rows = doc.select(rowsPath);
+	    int rowSize = rows.size();
+	    for(int i = 1;i<rowSize;i++){
+	    	List<Element> elements = rows.get(i).getElementsByTag("td");
+	    	HashMap<String, Object> map = new HashMap<String, Object>();
+	    	for(int j =0 ; j < elements.size(); j++){
+	    		map.put(headers.get(j), elements.get(j).text());
+	    	}
+	    	
+	    	retData.add(map);
+	    }
+	    
+//	    System.out.println(retData);
+	    
+	    return retData;
+	    
 		
-		Document docArchivi = Jsoup.parse(archiviIS, "utf-8", "");
-//		Elements stru = docArchivi.select("ul li a[href]");
-		Elements stru = docArchivi.select("body > h3:nth-child(3) > ul:nth-child(1) > ul:nth-child(3) > ol:nth-child(1) > h4:nth-child(1) > li  a[href]");
-		
-		for (Element element : stru) {
-			System.out.println("Stru "+element.attr("href"));
-		}
-		
-		//Elements soggettiProduttori = docArchivi.select("h3 ul a[href]");
-		Elements soggettiProduttori = docArchivi.select("body > h3:nth-child(8) > ul:nth-child(1) > a[href]");
-		for (Element element : soggettiProduttori) {
-			System.out.println("Soggetti produttori: "+element.attr("href"));
-		}
-		Elements archivi_doc = docArchivi.select("body > h3:nth-child(3) > ul > a[href]");
-		for (Element element : archivi_doc) {
-			System.out.println("Archivi: "+element.attr("href"));
-		}
-		
-		zip.close();
 	}
 }
