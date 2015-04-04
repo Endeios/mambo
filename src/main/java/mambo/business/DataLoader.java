@@ -39,8 +39,6 @@ public class DataLoader {
 	    	retData.add(map);
 	    }
 	    
-//	    System.out.println(retData);
-	    
 	    return retData;
 	    
 		
