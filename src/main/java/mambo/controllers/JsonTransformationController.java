@@ -35,7 +35,7 @@ public class JsonTransformationController {
 	private ExcelToJson translator;
 	
 
-	@RequestMapping(value = "/transform", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/transformToJson", method = RequestMethod.POST, produces = "application/json")
 	public void transform(
 			@RequestParam("file") MultipartFile file,
 			HttpServletResponse response) throws IOException,
