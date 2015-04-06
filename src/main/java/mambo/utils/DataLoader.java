@@ -1,4 +1,4 @@
-package mambo.business;
+package mambo.utils;
 
 import java.io.File;
 import java.io.IOException;
