@@ -1,6 +1,9 @@
 package mambo.business.translators;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,15 +17,19 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import mambo.business.Translator;
 
 public class ExcelToJson implements Translator {
 
 	private Integer titleRowIndex = 0;
 	private Integer firstRowIndex = 1;
+	
+	private ObjectMapper objectMapper; 
 
 	
-	public Map<String, Object> translate(MultipartFile file)
+	public ByteArrayOutputStream translate(MultipartFile file)
 			throws IOException, InvalidFormatException {
 		Workbook wb = WorkbookFactory.create(file.getInputStream());
 		int numberOfSheets = wb.getNumberOfSheets();
@@ -35,7 +42,10 @@ public class ExcelToJson implements Translator {
 			List<Map<String, Object>> data = extractSheetByIndex(currentSheet);
 			documentMap.put(sheetName, data);
 		}
-		return documentMap;
+		byte[] bytes = objectMapper.writeValueAsBytes(documentMap);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length);
+		baos.write(bytes);
+		return baos;
 	}
 
 	private List<Map<String, Object>> extractSheetByIndex(Sheet sheet) {
@@ -99,5 +109,13 @@ public class ExcelToJson implements Translator {
 
 	public void setFirstRowIndex(Integer firstRowIndex) {
 		this.firstRowIndex = firstRowIndex;
+	}
+
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 }
