@@ -10,9 +10,24 @@
 	<context:annotation-config />
 	<context:spring-configured />
 	<mvc:default-servlet-handler />
-	<bean class="mambo.controllers.TransformationController" id="transformationController">
+	<bean class="mambo.business.translators.ExcelToJson" id="excelToJson">
 		<property name="firstRowIndex" value="1" />
 		<property name="titleRowIndex" value="0" />
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+
+	<bean class="mambo.business.translators.ExcelToAEF" id="excelToAEF">
+		<property name="firstRowIndex" value="1" />
+		<property name="titleRowIndex" value="0" />
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+	
+	<bean class="mambo.controllers.AEFTransformationController" id="AEFTransformationController">
+		<property name="translator" ref="excelToAEF"/>
+	</bean>
+	
+	<bean class="mambo.controllers.JsonTransformationController" id="transformationController">
+		<property name="translator" ref="excelToJson"></property>
 	</bean>
 
 	<mvc:resources location="/static/bootstrap/dist/"
@@ -37,7 +52,10 @@
 		<property name="objectMapper" ref="jacksonObjectMapper" />
 	</bean>
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
-	<!-- Jackson global config -->
+	
+	
+	<!-- Jackson serialization global config -->
+	
 	<bean id="jacksonSerializationConfig" class="com.fasterxml.jackson.databind.SerializationConfig"
 		factory-bean="jacksonObjectMapper" factory-method="getSerializationConfig" />
 	<bean

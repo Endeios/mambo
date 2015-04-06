@@ -28,15 +28,21 @@
 		<div class="jumbotron">
 			<h1>Mambo Converter</h1>
 			<p class="lead">Convert documents from .xls to json</p>
-			<p>
-				<form action="<c:url value="/transform"/>" method="post" enctype="multipart/form-data">
+				<form action="<c:url value="/transformToJson"/>" method="post" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="file">File</label>
 						<input type="file" name="file" id="file" class="btn btn-info"/>
 						<input type="submit" value="XForm!" class="btn btn-success"/>
 					</div>
 				</form>
-			</p>
+				<p class="lead">Convert documents from .xls to aef</p>
+				<form action="<c:url value="/transformToAEF"/>" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="file">File</label>
+						<input type="file" name="file" id="file" class="btn btn-info"/>
+						<input type="submit" value="XForm!" class="btn btn-success"/>
+					</div>
+				</form>
 		</div>
 
 		<footer class="footer">
