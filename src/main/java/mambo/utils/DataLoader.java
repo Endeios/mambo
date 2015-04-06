@@ -11,9 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.runner.notification.RunListener.ThreadSafe;
 
-@ThreadSafe
 public class DataLoader {
 	public static List<Map<String,Object>> loadArchive(File archive) throws IOException{
 		List<Map<String,Object>> retData = new ArrayList<Map<String,Object>>();
